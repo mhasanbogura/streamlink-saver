@@ -1,9 +1,10 @@
 /* Broadcast Atelier: hosted download route with event-time filename assignment for dependable local .strm output. */
-importScripts("config.js");
+if (typeof importScripts === "function") importScripts("config.js");
 
 const MENU_ID = "streamlink-save-link";
 const HOSTED_HANDOFF_URL = "https://mhasanbogura.github.io/streamlink-saver/";
 const PENDING_SAVES_KEY = "streamlinkPendingSaves";
+const transientStorage = chrome.storage.session || chrome.storage.local;
 
 function normalizeSavePath(value) {
   const parts = String(value || "")
@@ -81,12 +82,12 @@ function buildDownloadPath(filename, folder) {
 }
 
 async function getPendingSaves() {
-  const { [PENDING_SAVES_KEY]: pending = [] } = await chrome.storage.session.get({ [PENDING_SAVES_KEY]: [] });
+  const { [PENDING_SAVES_KEY]: pending = [] } = await transientStorage.get({ [PENDING_SAVES_KEY]: [] });
   return Array.isArray(pending) ? pending : [];
 }
 
 async function setPendingSaves(pending) {
-  await chrome.storage.session.set({ [PENDING_SAVES_KEY]: pending.slice(-8) });
+  await transientStorage.set({ [PENDING_SAVES_KEY]: pending.slice(-8) });
 }
 
 async function queueHostedSave(url, filename) {

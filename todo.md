@@ -1,5 +1,11 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Create a Firefox-compatible extension manifest and package.
+- [x] Add extension-only `Chrome/Save link as .strm.zip` and `Firefox/Save link as .strm.zip` repository downloads.
+- [ ] Validate both packages and upload the cross-browser distribution layout to GitHub.
+
+- [x] Create the public v1.7.0 GitHub Release with the default-Downloads settings ZIP.
+
 - [x] Add an extension settings page with a persistent save path defaulting to `Downloads/`.
 - [x] Apply the stored settings path to hosted download filename assignment.
 - [x] Validate the default and custom folder paths, then publish the update.

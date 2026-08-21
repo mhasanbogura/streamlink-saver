@@ -5,7 +5,7 @@
   "description": "Save a media URL from any webpage as a .strm file.",
   "permissions": ["activeTab", "contextMenus", "downloads", "notifications", "storage", "tabs"],
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["config.js", "background.js"]
   },
   "content_scripts": [
     {
@@ -33,5 +33,11 @@
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "streamlink-saver@mhasanbogura.github.io",
+      "strict_min_version": "109.0"
+    }
   }
 }
