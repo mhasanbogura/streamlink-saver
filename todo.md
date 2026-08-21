@@ -1,5 +1,8 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Create one `Save link as .strm.zip` release asset containing `Chrome/` and `Firefox/` extension-source folders.
+- [x] Replace the separate Chrome and Firefox release ZIPs with the combined package.
+
 - [x] Rename the Chrome GitHub Release asset to `Save link as .strm for Chrome.zip`.
 
 - [x] Rename the extension source folder to `Save link as .strm`.

@@ -21,13 +21,13 @@ The GitHub Actions workflow at `.github/workflows/deploy-pages.yml` deploys the 
 
 ## Browser download packages
 
-The repository keeps the unzipped source files in `Save link as .strm/`. Browser-specific ZIP packages are published only as assets in the [latest GitHub Release](https://github.com/mhasanbogura/streamlink-saver/releases/latest), so the source folder contains no nested ZIP downloads.
+The repository keeps the shared unzipped source files in `Save link as .strm/`. The [latest GitHub Release](https://github.com/mhasanbogura/streamlink-saver/releases/latest) provides one package, `Save link as .strm.zip`, which contains the browser-specific source folders and no nested ZIP files.
 
-| Browser | Download | Installation |
+| Browser | Folder inside `Save link as .strm.zip` | Installation |
 | --- | --- | --- |
-| Chrome | [Release asset: `Save link as .strm for Chrome.zip`](https://github.com/mhasanbogura/streamlink-saver/releases/download/v1.8.0/Save.link.as.strm.for.Chrome.zip) | Extract it, then use **Load unpacked** from `chrome://extensions`. |
-| Firefox | [Release asset: `Save link as .strm - Firefox.zip`](https://github.com/mhasanbogura/streamlink-saver/releases/download/v1.8.0/Save.link.as.strm.-.Firefox.zip) | Extract it, open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, and choose `manifest.json`. |
+| Chrome | `Save link as .strm/Chrome/` | Download [**`Save link as .strm.zip`**](https://github.com/mhasanbogura/streamlink-saver/releases/latest), extract it, then use **Load unpacked** from `chrome://extensions` and select this folder. |
+| Firefox | `Save link as .strm/Firefox/` | Extract the same release ZIP, open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, and choose this folder’s `manifest.json`. |
 
-Both ZIP files contain only the extension files. The Firefox package uses a Firefox-specific Manifest V3 manifest with the same save-path settings and right-click workflow.
+The `Chrome/` and `Firefox/` folders both contain only extension files. The Firefox folder uses a Firefox-specific Manifest V3 manifest with the same save-path settings and right-click workflow.
 
 See [GITHUB_PAGES_HOSTING.md](GITHUB_PAGES_HOSTING.md) for more deployment detail.
