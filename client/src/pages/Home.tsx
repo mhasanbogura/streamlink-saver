@@ -4,7 +4,7 @@ import { Check, Copy, Download, ExternalLink, FileText, Link2, MonitorUp } from 
 
 const textureUrl = "/manus-storage/streamlink-calibration-texture_1972e42a.png";
 const signalFieldUrl = "/manus-storage/streamlink-signal-field_5d5e2101.png";
-const markUrl = "/manus-storage/streamlink-saver-mark_5b060a27.png";
+const markUrl = `${import.meta.env.BASE_URL}streamlink-link-icon.png`;
 
 function validUrl(value: string) {
   try {

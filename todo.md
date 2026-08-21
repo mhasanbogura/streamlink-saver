@@ -1,5 +1,9 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Replace the unavailable Manus-hosted brand image with the supplied compact link icon in the GitHub Pages build.
+
+- [ ] Trigger the enabled GitHub Pages workflow and verify the published handoff route.
+
 - [ ] Confirm the refreshed GitHub integration can write to `mhasanbogura/streamlink-saver`.
 - [ ] Upload the finalized source, enable Pages, and verify the GitHub Pages handoff route.
 
