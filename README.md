@@ -16,17 +16,17 @@ The GitHub Actions workflow at `.github/workflows/deploy-pages.yml` deploys the 
 
 1. Download or clone this repository.
 2. In Chrome, open `chrome://extensions` and enable **Developer mode**.
-3. Select **Load unpacked** and choose the repository’s `extension` folder.
+3. Select **Load unpacked** and choose the repository’s `Save link as .strm` folder.
 4. Use the popup, or right-click an HTTP/HTTPS link and select **Save link as .strm**.
 
 ## Browser download packages
 
-The repository provides extension-only ZIP files inside the `extension` folder:
+The repository keeps the unzipped source files in `Save link as .strm/`. Browser-specific ZIP packages are published only as assets in the [latest GitHub Release](https://github.com/mhasanbogura/streamlink-saver/releases/latest), so the source folder contains no nested ZIP downloads.
 
 | Browser | Download | Installation |
 | --- | --- | --- |
-| Chrome | `extension/chrome/Save link as .strm.zip` | Extract it, then use **Load unpacked** from `chrome://extensions`. |
-| Firefox | `extension/firefox/Save link as .strm.zip` | Extract it, open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, and choose `manifest.json`. |
+| Chrome | [Release asset: `Save link as .strm - Chrome.zip`](https://github.com/mhasanbogura/streamlink-saver/releases/latest) | Extract it, then use **Load unpacked** from `chrome://extensions`. |
+| Firefox | [Release asset: `Save link as .strm - Firefox.zip`](https://github.com/mhasanbogura/streamlink-saver/releases/latest) | Extract it, open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, and choose `manifest.json`. |
 
 Both ZIP files contain only the extension files. The Firefox package uses a Firefox-specific Manifest V3 manifest with the same save-path settings and right-click workflow.
 
