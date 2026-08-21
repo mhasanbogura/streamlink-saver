@@ -1,7 +1,7 @@
 # StreamLink Saver Enhancement Tasks
 
 - [x] Rebuild the release ZIP so extraction opens directly to `Chrome/` and `Firefox/`.
-- [ ] Replace the release asset and verify GitHub’s displayed and downloaded filename behavior.
+- [x] Replace the release asset and verify GitHub’s displayed and downloaded filename behavior; GitHub displays the requested label but normalizes spaces to periods in the downloaded asset filename.
 
 - [x] Create one `Save link as .strm.zip` release asset containing `Chrome/` and `Firefox/` extension-source folders.
 - [x] Replace the separate Chrome and Firefox release ZIPs with the combined package.
