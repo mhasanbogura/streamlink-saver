@@ -1,5 +1,7 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Rename the Chrome GitHub Release asset to `Save link as .strm for Chrome.zip`.
+
 - [x] Rename the extension source folder to `Save link as .strm`.
 - [x] Build clean Chrome and Firefox extension-only ZIPs for the GitHub Release.
 - [x] Upload the renamed source and remove all repository ZIP download folders.
