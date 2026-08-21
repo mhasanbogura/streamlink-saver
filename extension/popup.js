@@ -34,8 +34,9 @@ function filenameFromUrl(value) {
     const url = new URL(value.trim());
     const lastSegment = url.pathname.split("/").filter(Boolean).pop();
     const decoded = lastSegment ? decodeURIComponent(lastSegment) : url.hostname.replace(/^www\./i, "");
-    const withoutExtension = decoded.replace(/\.[a-z0-9]{1,10}$/i, "");
-    return sanitizeFileBase(withoutExtension || url.hostname);
+    const withoutExtension = decoded.replace(/\.(mkv|mp4|m4v|avi|mov|webm|wmv|mpg|mpeg|ts|m2ts|m3u8|mp3|flac|aac|wav)$/i, "").replace(/\.[a-z0-9]{1,10}$/i, "");
+    const base = sanitizeFileBase(withoutExtension || url.hostname);
+    return /^(download|file|stream|video|media|watch)$/i.test(base) ? sanitizeFileBase(`stream-${url.hostname}`) : base;
   } catch {
     return "stream";
   }
@@ -96,12 +97,12 @@ async function saveStreamFile() {
 
   const filename = `${sanitizeFileBase(fileName.value)}.strm`;
   const dataUrl = createStrmDataUrl(url);
-  const configuredFolder = String(globalThis.STREAMLINK_CONFIG?.saveFolder || "")
+  const configuredParts = String(globalThis.SAVE_PATH || "")
     .split(/[\\/]+/)
     .map((part) => part.replace(/[<>:"|?*\u0000-\u001f]/g, "-").trim())
-    .filter((part) => part && part !== "." && part !== "..")
-    .join("/")
-    .slice(0, 180);
+    .filter((part) => part && part !== "." && part !== "..");
+  if (configuredParts[0]?.toLowerCase() === "downloads") configuredParts.shift();
+  const configuredFolder = configuredParts.join("/").slice(0, 180);
   const downloadPath = configuredFolder ? `${configuredFolder}/${filename}` : filename;
   saveButton.disabled = true;
   setStatus("Creating the .strm file…");

@@ -1,5 +1,11 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Replace the configuration object with a simple Downloads-prefixed `SAVE_PATH` constant.
+- [x] Strip the leading `Downloads` directory before passing the target subfolder to Chrome.
+- [x] Preserve the resolved `.strm` filename for configured subfolder downloads and validate it.
+
+- [x] Create the public v1.3.0 GitHub Release with the configuration-file extension ZIP.
+
 - [x] Remove the fixed-folder settings page and popup gear interface.
 - [x] Add an editable configuration file that defines the Downloads-relative save subfolder.
 - [x] Validate and publish the configuration-file based save behavior.

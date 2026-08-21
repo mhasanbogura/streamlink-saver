@@ -11,16 +11,16 @@ function createStrmDataUrl(url) {
   return `data:application/octet-stream;base64,${btoa(binary)}`;
 }
 
-function sanitizeFolder(value) {
-  return String(value || "")
+function normalizeSavePath(value) {
+  const parts = String(value || "")
     .split(/[\\/]+/)
     .map((part) => part.replace(/[<>:"|?*\u0000-\u001f]/g, "-").trim())
-    .filter((part) => part && part !== "." && part !== "..")
-    .join("/")
-    .slice(0, 180);
+    .filter((part) => part && part !== "." && part !== "..");
+  if (parts[0]?.toLowerCase() === "downloads") parts.shift();
+  return parts.join("/").slice(0, 180);
 }
 
-const fixedSaveFolder = sanitizeFolder(globalThis.STREAMLINK_CONFIG?.saveFolder);
+const fixedSaveFolder = normalizeSavePath(globalThis.SAVE_PATH);
 
 function showNotification(message, kind = "saved") {
   const notificationId = `streamlink-${kind}-${Date.now()}`;
