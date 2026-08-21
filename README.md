@@ -21,12 +21,12 @@ The GitHub Actions workflow at `.github/workflows/deploy-pages.yml` deploys the 
 
 ## Browser download packages
 
-The repository provides extension-only ZIP files in these two folders:
+The repository provides extension-only ZIP files inside the `extension` folder:
 
 | Browser | Download | Installation |
 | --- | --- | --- |
-| Chrome | `Chrome/Save link as .strm.zip` | Extract it, then use **Load unpacked** from `chrome://extensions`. |
-| Firefox | `Firefox/Save link as .strm.zip` | Extract it, open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, and choose `manifest.json`. |
+| Chrome | `extension/chrome/Save link as .strm.zip` | Extract it, then use **Load unpacked** from `chrome://extensions`. |
+| Firefox | `extension/firefox/Save link as .strm.zip` | Extract it, open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, and choose `manifest.json`. |
 
 Both ZIP files contain only the extension files. The Firefox package uses a Firefox-specific Manifest V3 manifest with the same save-path settings and right-click workflow.
 

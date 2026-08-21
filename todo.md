@@ -1,8 +1,12 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Move browser ZIP distribution folders under `extension/chrome` and `extension/firefox`.
+- [x] Keep the nested package ZIPs out of their own extension archives.
+- [ ] Validate and upload the nested GitHub distribution layout.
+
 - [x] Create a Firefox-compatible extension manifest and package.
 - [x] Add extension-only `Chrome/Save link as .strm.zip` and `Firefox/Save link as .strm.zip` repository downloads.
-- [ ] Validate both packages and upload the cross-browser distribution layout to GitHub.
+- [x] Validate both packages and upload the cross-browser distribution layout to GitHub.
 
 - [x] Create the public v1.7.0 GitHub Release with the default-Downloads settings ZIP.
 
