@@ -29,11 +29,6 @@ button { cursor: pointer; }
 .brand-mark { width: 28px; height: 28px; color: var(--ink); }
 .brand-lockup h1 { margin: 0; font-size: 14px; line-height: 1; letter-spacing: -.04em; font-weight: 680; }
 .brand-lockup p, .local-badge { margin: 5px 0 0; color: var(--quiet); font-family: var(--mono); font-size: 8px; letter-spacing: .13em; }
-.masthead-actions { display: flex; align-items: center; gap: 7px; }
-.settings-button { display: inline-grid; width: 27px; height: 27px; place-items: center; padding: 0; border: 1px solid var(--line); background: rgba(0,0,0,.14); color: var(--muted); transition: color 150ms var(--ease), border-color 150ms var(--ease), transform 150ms var(--ease); }
-.settings-button svg { width: 14px; height: 14px; }
-.settings-button:hover, .settings-button:focus-visible { color: var(--red); border-color: rgba(255, 86, 48, .55); outline: none; }
-.settings-button:active { transform: scale(.94); }
 .local-badge { display: inline-flex; align-items: center; gap: 5px; margin: 0; padding: 5px 7px; border: 1px solid var(--line); }
 .local-badge i { width: 5px; height: 5px; border-radius: 50%; background: #8ecf91; box-shadow: 0 0 8px rgba(142, 207, 145, .65); }
 

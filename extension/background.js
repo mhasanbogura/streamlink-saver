@@ -1,4 +1,6 @@
-/* Broadcast Atelier: quiet, direct context-menu routing from an HTTP(S) link to a local .strm text file. */
+/* Broadcast Atelier: direct context-menu routing with a fixed Downloads-relative folder defined in config.js. */
+importScripts("config.js");
+
 const MENU_ID = "streamlink-save-link";
 const HOSTED_HANDOFF_URL = "https://mhasanbogura.github.io/streamlink-saver/";
 
@@ -18,30 +20,15 @@ function sanitizeFolder(value) {
     .slice(0, 180);
 }
 
-async function getSaveFolder() {
-  const { saveFolder = "" } = await chrome.storage.sync.get({ saveFolder: "" });
-  return sanitizeFolder(saveFolder);
-}
+const fixedSaveFolder = sanitizeFolder(globalThis.STREAMLINK_CONFIG?.saveFolder);
 
-function showHandoffNotification(filename) {
-  const notificationId = `streamlink-handoff-${Date.now()}`;
+function showNotification(message, kind = "saved") {
+  const notificationId = `streamlink-${kind}-${Date.now()}`;
   chrome.notifications.create(notificationId, {
     type: "basic",
     iconUrl: "icon64.png",
     title: "StreamLink Saver",
-    message: `Creating ${filename} via GitHub Pages.`,
-    priority: 1,
-  });
-  setTimeout(() => chrome.notifications.clear(notificationId).catch(() => {}), 6000);
-}
-
-function showDirectSaveNotification(path) {
-  const notificationId = `streamlink-saved-${Date.now()}`;
-  chrome.notifications.create(notificationId, {
-    type: "basic",
-    iconUrl: "icon64.png",
-    title: "StreamLink Saver",
-    message: `Saved to Downloads/${path}`,
+    message,
     priority: 1,
   });
   setTimeout(() => chrome.notifications.clear(notificationId).catch(() => {}), 6000);
@@ -120,29 +107,30 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         // Content scripts are unavailable on browser-managed pages; the URL fallback remains available.
       }
     }
+
     const filename = filenameFromLabel(label, url);
-    const saveFolder = await getSaveFolder();
-    if (saveFolder) {
-      const downloadPath = `${saveFolder}/${filename}`;
+    if (fixedSaveFolder) {
+      const downloadPath = `${fixedSaveFolder}/${filename}`;
       await chrome.downloads.download({
         url: createStrmDataUrl(url),
         filename: downloadPath,
         saveAs: false,
         conflictAction: "uniquify",
       });
-      showDirectSaveNotification(downloadPath);
+      showNotification(`Saved to Downloads/${downloadPath}`);
       return;
     }
+
     const handoffUrl = new URL(HOSTED_HANDOFF_URL);
     handoffUrl.searchParams.set("handoff", "1");
     handoffUrl.searchParams.set("streamUrl", url);
     handoffUrl.searchParams.set("filename", filename);
     const handoffTab = await chrome.tabs.create({ url: handoffUrl.href, active: false });
-    showHandoffNotification(filename);
+    showNotification(`Creating ${filename} via GitHub Pages.`, "handoff");
     if (handoffTab.id) {
       setTimeout(() => chrome.tabs.remove(handoffTab.id).catch(() => {}), 7000);
     }
   } catch (error) {
-    console.warn("StreamLink Saver could not open the hosted .strm download handoff", error);
+    console.warn("StreamLink Saver could not create the .strm file", error);
   }
 });

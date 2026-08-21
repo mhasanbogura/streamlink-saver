@@ -1,8 +1,14 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Remove the fixed-folder settings page and popup gear interface.
+- [x] Add an editable configuration file that defines the Downloads-relative save subfolder.
+- [x] Validate and publish the configuration-file based save behavior.
+
+- [x] Create the public v1.2.0 GitHub Release with the fixed-folder extension ZIP.
+
 - [x] Add a persistent fixed Downloads subfolder option that is used without repeated location prompts.
 - [x] Apply the configured fixed folder to popup and right-click .strm saves.
-- [ ] Validate the configured save paths and publish the updated extension release.
+- [x] Validate the configured save paths and publish the updated extension release.
 
 - [ ] Upload the finalized v1.1.0 source changes to the GitHub repository.
 - [ ] Create the public v1.1.0 GitHub Release with the extension ZIP asset.
