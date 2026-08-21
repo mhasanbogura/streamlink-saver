@@ -65,7 +65,7 @@ function setStatus(message, kind = "") {
 
 async function useCurrentPage() {
   if (!globalThis.chrome?.tabs) {
-    setStatus("Open this popup from Chrome to use the current page.", "error");
+    setStatus("Open this popup from the browser to use the current page.", "error");
     return;
   }
   try {
@@ -99,7 +99,7 @@ async function saveStreamFile() {
     setStatus(`Saving to Downloads/${response.finalPath}`, "success");
   } catch {
     statusDot.className = "status-dot ready";
-    setStatus("Chrome could not create the file. Try again.", "error");
+    setStatus("The browser could not create the file. Try again.", "error");
   } finally {
     saveButton.disabled = false;
   }

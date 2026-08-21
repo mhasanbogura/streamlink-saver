@@ -1,5 +1,8 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Diagnose why the Firefox extension package does not work: Firefox does not provide Chrome's filename-determination interception, which prevented the background script from starting.
+- [ ] Fix Firefox-specific compatibility issues and republish the validated package.
+
 - [x] Add Chrome-specific and Firefox-specific README files to the browser release folders.
 - [x] Rebuild and publish the combined release ZIP with the updated documentation.
 

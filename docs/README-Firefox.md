@@ -13,6 +13,10 @@ Firefox temporary add-ons are removed when Firefox restarts. A signed Firefox pa
 
 ## Save location
 
-The default save path is `Downloads/`. Select the settings gear in the popup to choose a persistent Downloads-relative folder. You can also edit `config.js` before loading the extension and then reload the temporary add-on from `about:debugging`.
+The default save path is `Downloads/`. Firefox creates the `.strm` file directly through its downloads API so the selected filename and Downloads-relative folder are assigned when the download starts. Select the settings gear in the popup to choose a persistent Downloads-relative folder. You can also edit `config.js` before loading the extension and then select **Reload** for the temporary add-on from `about:debugging`.
+
+## If the menu does not appear
+
+After loading or reloading the temporary add-on, refresh the webpage where you want to right-click a link. The **Save link as .strm** item appears only for HTTP and HTTPS links.
 
 > Use only URLs and media you are authorized to access.

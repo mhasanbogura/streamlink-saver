@@ -4,6 +4,7 @@ if (typeof importScripts === "function") importScripts("config.js");
 const MENU_ID = "streamlink-save-link";
 const HOSTED_HANDOFF_URL = "https://mhasanbogura.github.io/streamlink-saver/";
 const PENDING_SAVES_KEY = "streamlinkPendingSaves";
+const IS_FIREFOX = typeof globalThis.browser?.runtime?.getBrowserInfo === "function";
 const transientStorage = chrome.storage.session || chrome.storage.local;
 
 function normalizeSavePath(value) {
@@ -92,6 +93,22 @@ async function setPendingSaves(pending) {
 
 async function queueHostedSave(url, filename) {
   const finalPath = buildDownloadPath(filename, await getActiveSaveFolder());
+
+  // Firefox does not implement Chrome's onDeterminingFilename interception.
+  // Create the tiny .strm file directly so its intended folder and filename
+  // are assigned by Firefox at download creation.
+  if (IS_FIREFOX) {
+    const dataUrl = `data:text/plain;charset=utf-8,${encodeURIComponent(url)}`;
+    await chrome.downloads.download({
+      url: dataUrl,
+      filename: finalPath,
+      conflictAction: "uniquify",
+      saveAs: false,
+    });
+    showNotification(`Saved to Downloads/${finalPath}`);
+    return finalPath;
+  }
+
   const pending = await getPendingSaves();
   pending.push({ finalPath, createdAt: Date.now() });
   await setPendingSaves(pending);
@@ -108,20 +125,22 @@ async function queueHostedSave(url, filename) {
   return finalPath;
 }
 
-chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
-  (async () => {
-    const pending = await getPendingSaves();
-    const next = pending.shift();
-    if (!next) {
-      suggest();
-      return;
-    }
-    await setPendingSaves(pending);
-    suggest({ filename: next.finalPath, conflictAction: "uniquify" });
-    showNotification(`Saved to Downloads/${next.finalPath}`);
-  })().catch(() => suggest());
-  return true;
-});
+if (!IS_FIREFOX && chrome.downloads.onDeterminingFilename) {
+  chrome.downloads.onDeterminingFilename.addListener((_downloadItem, suggest) => {
+    (async () => {
+      const pending = await getPendingSaves();
+      const next = pending.shift();
+      if (!next) {
+        suggest();
+        return;
+      }
+      await setPendingSaves(pending);
+      suggest({ filename: next.finalPath, conflictAction: "uniquify" });
+      showNotification(`Saved to Downloads/${next.finalPath}`);
+    })().catch(() => suggest());
+    return true;
+  });
+}
 
 async function setUpMenu() {
   await chrome.contextMenus.removeAll();
