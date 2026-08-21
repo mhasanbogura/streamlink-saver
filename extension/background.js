@@ -48,7 +48,9 @@ function sanitizeFileBase(value) {
 }
 
 function removeMediaExtension(value) {
-  return value.replace(/\.(mkv|mp4|m4v|avi|mov|webm|wmv|mpg|mpeg|ts|m2ts|m3u8|mp3|flac|aac|wav)$/i, "");
+  const mediaBoundary = /\.(mkv|mp4|m4v|avi|mov|webm|wmv|mpg|mpeg|ts|m2ts|m3u8|mp3|flac|aac|wav)(?=$|[\s[\](){}_-])/i;
+  const match = value.match(mediaBoundary);
+  return match ? value.slice(0, match.index) : value;
 }
 
 function isGenericName(value) {

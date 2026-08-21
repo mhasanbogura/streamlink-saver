@@ -1,5 +1,10 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Trim visible-link label text after a recognized media extension such as `.mkv`.
+- [x] Validate that download metadata is excluded from the final `.strm` filename.
+
+- [x] Create the public v1.5.0 GitHub Release with the hosted-interception extension ZIP.
+
 - [x] Route saves through the hosted download page and keep the expected `.strm` path pending in the extension.
 - [x] Intercept the hosted download event to force the configured subfolder and resolved `.strm` filename.
 - [x] Validate that generic browser download names no longer replace the intended filename.

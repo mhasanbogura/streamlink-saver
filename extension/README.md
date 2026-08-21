@@ -25,6 +25,8 @@ const SAVE_PATH = "Downloads/Direct Link";
 ```
 
 Use a path such as `Downloads/Media/Streams`. StreamLink Saver opens the hosted download route, then assigns the configured final filename only when Chrome determines the download. This avoids generic names such as `download` and preserves the `.strm` extension inside the configured subfolder. Reload the extension at `chrome://extensions` after changing the configuration file.
+
+When a visible link label contains download metadata after a recognized media extension—such as `.mkv 2026-08-15 13-24 1.2 GB`—StreamLink Saver keeps only the media title before `.mkv`, then writes the matching `.strm` filename.
 3. Alternatively, open StreamLink Saver, choose **Use current page** or paste the URL, optionally change the output base name, and select **Save link as .strm**.
 
 For the example URL above, the extension writes `movie.strm` containing:
