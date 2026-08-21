@@ -14,7 +14,12 @@ function normalizeSavePath(value) {
   return parts.join("/").slice(0, 180);
 }
 
-const fixedSaveFolder = normalizeSavePath(globalThis.SAVE_PATH);
+const DEFAULT_SAVE_PATH = globalThis.SAVE_PATH || "Downloads/";
+
+async function getActiveSaveFolder() {
+  const { savePath = DEFAULT_SAVE_PATH } = await chrome.storage.sync.get({ savePath: DEFAULT_SAVE_PATH });
+  return normalizeSavePath(savePath);
+}
 
 function showNotification(message, kind = "saved") {
   const notificationId = `streamlink-${kind}-${Date.now()}`;
@@ -71,8 +76,8 @@ function filenameFromLabel(label, fallbackUrl) {
   return fileBase && !isGenericName(fileBase) ? `${fileBase}.strm` : filenameFromUrl(fallbackUrl);
 }
 
-function buildDownloadPath(filename) {
-  return fixedSaveFolder ? `${fixedSaveFolder}/${filename}` : filename;
+function buildDownloadPath(filename, folder) {
+  return folder ? `${folder}/${filename}` : filename;
 }
 
 async function getPendingSaves() {
@@ -85,7 +90,7 @@ async function setPendingSaves(pending) {
 }
 
 async function queueHostedSave(url, filename) {
-  const finalPath = buildDownloadPath(filename);
+  const finalPath = buildDownloadPath(filename, await getActiveSaveFolder());
   const pending = await getPendingSaves();
   pending.push({ finalPath, createdAt: Date.now() });
   await setPendingSaves(pending);
@@ -99,6 +104,7 @@ async function queueHostedSave(url, filename) {
   if (handoffTab.id) {
     setTimeout(() => chrome.tabs.remove(handoffTab.id).catch(() => {}), 7000);
   }
+  return finalPath;
 }
 
 chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
@@ -138,7 +144,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type !== "streamlink-save" || !isSupportedUrl(message.url)) return;
   const filename = sanitizeFileBase(message.filename || "stream") + ".strm";
   queueHostedSave(message.url, filename)
-    .then(() => sendResponse({ ok: true, finalPath: buildDownloadPath(filename) }))
+    .then((finalPath) => sendResponse({ ok: true, finalPath }))
     .catch((error) => sendResponse({ ok: false, error: String(error?.message || error) }));
   return true;
 });

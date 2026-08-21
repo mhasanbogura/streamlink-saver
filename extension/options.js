@@ -1,38 +1,42 @@
-/* Broadcast Atelier: one persistent Downloads-relative folder, applied automatically without repeated prompts. */
-const form = document.querySelector("#settings-form");
-const folderInput = document.querySelector("#save-folder");
-const pathPreview = document.querySelector("#path-preview");
+/* Broadcast Atelier: persistent path preference with an explicit Downloads/ default. */
+const input = document.querySelector("#save-path");
+const saveButton = document.querySelector("#save-button");
+const resetButton = document.querySelector("#reset-button");
 const status = document.querySelector("#status");
+const DEFAULT_SAVE_PATH = globalThis.SAVE_PATH || "Downloads/";
 
-function sanitizeFolder(value) {
-  return String(value || "")
+function cleanPath(value) {
+  const parts = String(value || "")
     .split(/[\\/]+/)
     .map((part) => part.replace(/[<>:"|?*\u0000-\u001f]/g, "-").trim())
-    .filter((part) => part && part !== "." && part !== "..")
-    .join("/")
-    .slice(0, 180);
+    .filter((part) => part && part !== "." && part !== "..");
+  if (parts[0]?.toLowerCase() !== "downloads") parts.unshift("Downloads");
+  return `${parts.join("/")}/`.replace(/\/{2,}/g, "/");
 }
 
-function refreshPreview() {
-  const folder = sanitizeFolder(folderInput.value);
-  pathPreview.textContent = folder ? `Downloads / ${folder} / movie.strm` : "Downloads / movie.strm";
+function setStatus(message, kind = "") {
+  status.textContent = message;
+  status.className = kind;
 }
 
-async function loadSettings() {
-  const { saveFolder = "" } = await chrome.storage.sync.get({ saveFolder: "" });
-  folderInput.value = saveFolder;
-  refreshPreview();
+async function load() {
+  const { savePath = DEFAULT_SAVE_PATH } = await chrome.storage.sync.get({ savePath: DEFAULT_SAVE_PATH });
+  input.value = cleanPath(savePath);
+  setStatus(`Current path: ${input.value}`);
 }
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const saveFolder = sanitizeFolder(folderInput.value);
-  folderInput.value = saveFolder;
-  await chrome.storage.sync.set({ saveFolder });
-  refreshPreview();
-  status.textContent = saveFolder ? `Fixed folder saved: Downloads / ${saveFolder}` : "Fixed folder cleared: saving to Downloads root.";
-  status.className = "success";
+async function save() {
+  const savePath = cleanPath(input.value || DEFAULT_SAVE_PATH);
+  input.value = savePath;
+  await chrome.storage.sync.set({ savePath });
+  setStatus(`Saved. Future files will use ${savePath}`, "success");
+}
+
+resetButton.addEventListener("click", async () => {
+  await chrome.storage.sync.remove("savePath");
+  input.value = cleanPath(DEFAULT_SAVE_PATH);
+  setStatus(`Reset to ${input.value}`, "success");
 });
+saveButton.addEventListener("click", () => save().catch(() => setStatus("Could not save this path.", "error")));
+load().catch(() => setStatus("Could not load settings.", "error"));
 
-folderInput.addEventListener("input", refreshPreview);
-loadSettings();

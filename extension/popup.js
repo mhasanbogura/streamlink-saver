@@ -7,6 +7,7 @@ const currentPageButton = document.querySelector("#current-page");
 const statusMessage = document.querySelector("#status-message");
 const statusDot = document.querySelector("#status-dot");
 const urlHint = document.querySelector("#url-hint");
+const settingsButton = document.querySelector("#settings-button");
 
 let fileNameWasEdited = false;
 
@@ -108,4 +109,5 @@ sourceUrl.addEventListener("input", () => { updateOutput(); setStatus("Ready to 
 fileName.addEventListener("input", () => { fileNameWasEdited = true; updateOutput(); });
 currentPageButton.addEventListener("click", useCurrentPage);
 saveButton.addEventListener("click", saveStreamFile);
+settingsButton.addEventListener("click", () => chrome.runtime.openOptionsPage());
 updateOutput();

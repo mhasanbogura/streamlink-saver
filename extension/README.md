@@ -18,7 +18,7 @@ StreamLink Saver creates a small `.strm` text file whose only content is the HTT
 
 ## Fixed save folder
 
-Edit `extension/config.js` before loading the extension. Set the one-line constant in the following style:
+Open the extension popup and select the **settings gear** to change the persistent save path. It defaults to `Downloads/`, which saves at the Downloads root. Use a path such as `Downloads/Direct Link` for a fixed subfolder. The original `extension/config.js` file defines the default value:
 
 ```js
 const SAVE_PATH = "Downloads/Direct Link";

@@ -1,5 +1,11 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Add an extension settings page with a persistent save path defaulting to `Downloads/`.
+- [x] Apply the stored settings path to hosted download filename assignment.
+- [x] Validate the default and custom folder paths, then publish the update.
+
+- [x] Create the public v1.6.0 GitHub Release with the media-boundary filename-cleanup ZIP.
+
 - [x] Trim visible-link label text after a recognized media extension such as `.mkv`.
 - [x] Validate that download metadata is excluded from the final `.strm` filename.
 
