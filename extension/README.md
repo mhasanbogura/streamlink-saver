@@ -15,6 +15,10 @@ StreamLink Saver creates a small `.strm` text file whose only content is the HTT
 1. Visit or paste a direct stream link, such as `https://example.com/movie.mp4`.
 2. For a direct download, right-click the link and select **Save link as .strm**. The extension opens the hosted StreamLink Saver download route in an inactive tab, which creates the `.strm` file using the page download flow, then closes automatically. When a link has a meaningful visible label or filename, StreamLink Saver uses that label (with the media extension replaced by `.strm`) instead of a generic URL endpoint such as `download`.
    A short Chrome notification confirms the filename being created.
+
+## Fixed save folder
+
+Open the extension popup and select the **settings gear**. Set a folder such as `Media/Streams` once. All future popup and right-click saves are written automatically to `Downloads/Media/Streams/` without a location prompt. Clear this setting to return to the Downloads root and hosted handoff fallback.
 3. Alternatively, open StreamLink Saver, choose **Use current page** or paste the URL, optionally change the output base name, and select **Save link as .strm**.
 
 For the example URL above, the extension writes `movie.strm` containing:

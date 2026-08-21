@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>StreamLink Saver — Save Folder</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <!-- Broadcast Atelier: focused settings page for a single persistent local-output decision. -->
+    <main class="settings-shell">
+      <header class="masthead">
+        <div class="brand-lockup">
+          <img src="icon64.png" alt="" />
+          <div><p>StreamLink</p><span>SAVER / SETTINGS</span></div>
+        </div>
+        <span class="badge"><i></i> FIXED PATH</span>
+      </header>
+
+      <section class="intro">
+        <p class="eyebrow">LOCAL OUTPUT</p>
+        <h1>Set it <em>once.</em><br />Save there always.</h1>
+        <p>Your folder is created inside Chrome’s Downloads location. The extension uses it automatically for popup and right-click saves.</p>
+      </section>
+
+      <form id="settings-form">
+        <label for="save-folder">DOWNLOADS SUBFOLDER</label>
+        <div class="field-wrap">
+          <span>Downloads /</span>
+          <input id="save-folder" type="text" maxlength="180" autocomplete="off" spellcheck="false" placeholder="StreamLink" aria-describedby="folder-hint" />
+        </div>
+        <p id="folder-hint">Use folders such as <code>Media/Streams</code>. Leave blank to use the main Downloads folder.</p>
+        <div class="output-preview"><span>FUTURE FILE</span><strong id="path-preview">Downloads / movie.strm</strong></div>
+        <button type="submit">Save fixed folder <span>→</span></button>
+        <p id="status" role="status">Choose the folder once, then save without prompts.</p>
+      </form>
+      <aside><b>Note</b><p>Chrome extensions can write inside Downloads, not silently choose arbitrary locations elsewhere on your device.</p></aside>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -1,11 +1,15 @@
 {
   "manifest_version": 3,
   "name": "StreamLink Saver",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Save a media URL from any webpage as a .strm file.",
-  "permissions": ["activeTab", "contextMenus", "downloads", "notifications", "tabs"],
+  "permissions": ["activeTab", "contextMenus", "downloads", "notifications", "storage", "tabs"],
   "background": {
     "service_worker": "background.js"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
   },
   "content_scripts": [
     {

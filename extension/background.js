@@ -2,6 +2,27 @@
 const MENU_ID = "streamlink-save-link";
 const HOSTED_HANDOFF_URL = "https://mhasanbogura.github.io/streamlink-saver/";
 
+function createStrmDataUrl(url) {
+  const content = new TextEncoder().encode(`${url}\n`);
+  let binary = "";
+  for (const byte of content) binary += String.fromCharCode(byte);
+  return `data:application/octet-stream;base64,${btoa(binary)}`;
+}
+
+function sanitizeFolder(value) {
+  return String(value || "")
+    .split(/[\\/]+/)
+    .map((part) => part.replace(/[<>:"|?*\u0000-\u001f]/g, "-").trim())
+    .filter((part) => part && part !== "." && part !== "..")
+    .join("/")
+    .slice(0, 180);
+}
+
+async function getSaveFolder() {
+  const { saveFolder = "" } = await chrome.storage.sync.get({ saveFolder: "" });
+  return sanitizeFolder(saveFolder);
+}
+
 function showHandoffNotification(filename) {
   const notificationId = `streamlink-handoff-${Date.now()}`;
   chrome.notifications.create(notificationId, {
@@ -9,6 +30,18 @@ function showHandoffNotification(filename) {
     iconUrl: "icon64.png",
     title: "StreamLink Saver",
     message: `Creating ${filename} via GitHub Pages.`,
+    priority: 1,
+  });
+  setTimeout(() => chrome.notifications.clear(notificationId).catch(() => {}), 6000);
+}
+
+function showDirectSaveNotification(path) {
+  const notificationId = `streamlink-saved-${Date.now()}`;
+  chrome.notifications.create(notificationId, {
+    type: "basic",
+    iconUrl: "icon64.png",
+    title: "StreamLink Saver",
+    message: `Saved to Downloads/${path}`,
     priority: 1,
   });
   setTimeout(() => chrome.notifications.clear(notificationId).catch(() => {}), 6000);
@@ -87,10 +120,22 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         // Content scripts are unavailable on browser-managed pages; the URL fallback remains available.
       }
     }
+    const filename = filenameFromLabel(label, url);
+    const saveFolder = await getSaveFolder();
+    if (saveFolder) {
+      const downloadPath = `${saveFolder}/${filename}`;
+      await chrome.downloads.download({
+        url: createStrmDataUrl(url),
+        filename: downloadPath,
+        saveAs: false,
+        conflictAction: "uniquify",
+      });
+      showDirectSaveNotification(downloadPath);
+      return;
+    }
     const handoffUrl = new URL(HOSTED_HANDOFF_URL);
     handoffUrl.searchParams.set("handoff", "1");
     handoffUrl.searchParams.set("streamUrl", url);
-    const filename = filenameFromLabel(label, url);
     handoffUrl.searchParams.set("filename", filename);
     const handoffTab = await chrome.tabs.create({ url: handoffUrl.href, active: false });
     showHandoffNotification(filename);

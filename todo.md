@@ -1,5 +1,9 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Add a persistent fixed Downloads subfolder option that is used without repeated location prompts.
+- [x] Apply the configured fixed folder to popup and right-click .strm saves.
+- [ ] Validate the configured save paths and publish the updated extension release.
+
 - [ ] Upload the finalized v1.1.0 source changes to the GitHub repository.
 - [ ] Create the public v1.1.0 GitHub Release with the extension ZIP asset.
 

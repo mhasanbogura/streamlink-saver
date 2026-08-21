@@ -7,6 +7,7 @@ const currentPageButton = document.querySelector("#current-page");
 const statusMessage = document.querySelector("#status-message");
 const statusDot = document.querySelector("#status-dot");
 const urlHint = document.querySelector("#url-hint");
+const settingsButton = document.querySelector("#settings-button");
 
 let fileNameWasEdited = false;
 
@@ -46,6 +47,20 @@ function createStrmDataUrl(url) {
   let binary = "";
   for (const byte of content) binary += String.fromCharCode(byte);
   return `data:application/octet-stream;base64,${btoa(binary)}`;
+}
+
+function sanitizeFolder(value) {
+  return String(value || "")
+    .split(/[\\/]+/)
+    .map((part) => part.replace(/[<>:"|?*\u0000-\u001f]/g, "-").trim())
+    .filter((part) => part && part !== "." && part !== "..")
+    .join("/")
+    .slice(0, 180);
+}
+
+async function getSaveFolder() {
+  const { saveFolder = "" } = await chrome.storage.sync.get({ saveFolder: "" });
+  return sanitizeFolder(saveFolder);
 }
 
 function updateOutput() {
@@ -96,12 +111,14 @@ async function saveStreamFile() {
 
   const filename = `${sanitizeFileBase(fileName.value)}.strm`;
   const dataUrl = createStrmDataUrl(url);
+  const saveFolder = await getSaveFolder();
+  const downloadPath = saveFolder ? `${saveFolder}/${filename}` : filename;
   saveButton.disabled = true;
   setStatus("Creating the .strm file…");
   try {
-    await chrome.downloads.download({ url: dataUrl, filename, saveAs: true, conflictAction: "uniquify" });
+    await chrome.downloads.download({ url: dataUrl, filename: downloadPath, saveAs: false, conflictAction: "uniquify" });
     statusDot.className = "status-dot success";
-    setStatus(`Saved ${filename}`, "success");
+    setStatus(`Saved ${saveFolder ? `to Downloads/${downloadPath}` : filename}`, "success");
   } catch {
     statusDot.className = "status-dot ready";
     setStatus("Chrome could not create the file. Try again.", "error");
@@ -114,4 +131,5 @@ sourceUrl.addEventListener("input", () => { updateOutput(); setStatus("Ready to 
 fileName.addEventListener("input", () => { fileNameWasEdited = true; updateOutput(); });
 currentPageButton.addEventListener("click", useCurrentPage);
 saveButton.addEventListener("click", saveStreamFile);
+settingsButton.addEventListener("click", () => chrome.runtime.openOptionsPage());
 updateOutput();
