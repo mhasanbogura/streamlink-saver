@@ -1,33 +1,33 @@
 # StreamLink Saver
 
-StreamLink Saver is a Manifest V3 Chrome extension and companion static page that turns a media URL into a `.strm` text file. The extension can use the popup or a right-click link action. For reliable filename handling, the right-click action opens the hosted companion page in an inactive tab, which creates the `.strm` download and then closes.
+StreamLink Saver is a Manifest V3 browser extension that writes an HTTP or HTTPS media URL to a small `.strm` file. It supports the popup and a right-click link action. The `.strm` file contains only the URL; it does not download, inspect, or redistribute media.
 
-## GitHub Pages
+## Download the browser package
 
-This repository is configured for the project URL:
+Download [**`Save link as .strm.zip`**](https://github.com/mhasanbogura/streamlink-saver/releases/latest) from the latest GitHub Release, then extract it. Its folders are arranged as follows:
 
 ```text
-https://mhasanbogura.github.io/streamlink-saver/
+Save link as .strm/
+├── Chrome/       # Chrome extension files and Chrome instructions
+└── Firefox/      # Firefox extension files and Firefox instructions
 ```
 
-The GitHub Actions workflow at `.github/workflows/deploy-pages.yml` deploys the static `dist/public` artifact whenever changes are pushed to `main`. In GitHub, set **Settings → Pages → Source** to **GitHub Actions** once to enable the deployment.
+Each browser folder includes its own `README.md` and the correct `manifest.json`. Use only the folder for your browser.
 
-## Install the Chrome extension
-
-1. Download or clone this repository.
-2. In Chrome, open `chrome://extensions` and enable **Developer mode**.
-3. Select **Load unpacked** and choose the repository’s `Save link as .strm` folder.
-4. Use the popup, or right-click an HTTP/HTTPS link and select **Save link as .strm**.
-
-## Browser download packages
-
-The repository keeps the shared unzipped source files in `Save link as .strm/`. The [latest GitHub Release](https://github.com/mhasanbogura/streamlink-saver/releases/latest) provides one package, `Save link as .strm.zip`, which extracts to a `Save link as .strm/` folder containing the browser-specific source folders and no nested ZIP files.
-
-| Browser | Folder after extracting `Save link as .strm.zip` | Installation |
+| Browser | Folder to open after extraction | Installation method |
 | --- | --- | --- |
-| Chrome | `Save link as .strm/Chrome/` | Download [**`Save link as .strm.zip`**](https://github.com/mhasanbogura/streamlink-saver/releases/latest), extract it, then use **Load unpacked** from `chrome://extensions` and select this folder. |
-| Firefox | `Save link as .strm/Firefox/` | Extract the same release ZIP, open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, and choose this folder’s `manifest.json`. |
+| Chrome | `Save link as .strm/Chrome/` | Open `chrome://extensions`, enable **Developer mode**, select **Load unpacked**, then select the `Chrome` folder. |
+| Firefox | `Save link as .strm/Firefox/` | Open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, then select `Firefox/manifest.json`. |
 
-The `Chrome/` and `Firefox/` folders both contain only extension files. The Firefox folder uses a Firefox-specific Manifest V3 manifest with the same save-path settings and right-click workflow.
+## Use StreamLink Saver
 
-See [GITHUB_PAGES_HOSTING.md](GITHUB_PAGES_HOSTING.md) for more deployment detail.
+After installation, right-click an HTTP or HTTPS media link and select **Save link as .strm**, or open the extension popup and paste a stream URL. The extension uses the hosted handoff page at [mhasanbogura.github.io/streamlink-saver](https://mhasanbogura.github.io/streamlink-saver/) to reliably assign the resolved `.strm` filename.
+
+The default save path is `Downloads/`. Select the settings gear in the popup to store a different Downloads-relative folder, such as `Downloads/Direct Link`. The package also includes `config.js`, where the default `SAVE_PATH` constant can be edited before loading the extension.
+
+> Use StreamLink Saver only for URLs and media you are authorized to access.
+
+## GitHub Pages handoff
+
+The companion page is deployed at <https://mhasanbogura.github.io/streamlink-saver/>. The workflow in `.github/workflows/deploy-pages.yml` publishes the static site when changes are pushed to `main`.
+

@@ -1,5 +1,8 @@
 # StreamLink Saver Enhancement Tasks
 
+- [ ] Add Chrome-specific and Firefox-specific README files to the browser release folders.
+- [ ] Rebuild and publish the combined release ZIP with the updated documentation.
+
 - [x] Wrap the release package in `Save link as .strm/` with `Chrome/` and `Firefox/` subfolders.
 - [x] Replace the release asset and verify the wrapped folder layout.
 
