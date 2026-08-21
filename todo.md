@@ -2,8 +2,8 @@
 
 - [x] Rename the extension source folder to `Save link as .strm`.
 - [x] Build clean Chrome and Firefox extension-only ZIPs for the GitHub Release.
-- [ ] Upload the renamed source and remove all repository ZIP download folders.
-- [ ] Publish the Chrome and Firefox ZIPs as GitHub Release assets.
+- [x] Upload the renamed source and remove all repository ZIP download folders.
+- [x] Publish the Chrome and Firefox ZIPs as GitHub Release assets.
 
 - [x] Move browser ZIP distribution folders under `Save link as .strm/chrome` and `Save link as .strm/firefox`.
 - [x] Keep the nested package ZIPs out of their own extension archives.

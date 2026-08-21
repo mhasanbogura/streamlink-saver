@@ -25,8 +25,8 @@ The repository keeps the unzipped source files in `Save link as .strm/`. Browser
 
 | Browser | Download | Installation |
 | --- | --- | --- |
-| Chrome | [Release asset: `Save link as .strm - Chrome.zip`](https://github.com/mhasanbogura/streamlink-saver/releases/latest) | Extract it, then use **Load unpacked** from `chrome://extensions`. |
-| Firefox | [Release asset: `Save link as .strm - Firefox.zip`](https://github.com/mhasanbogura/streamlink-saver/releases/latest) | Extract it, open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, and choose `manifest.json`. |
+| Chrome | [Release asset: `Save link as .strm - Chrome.zip`](https://github.com/mhasanbogura/streamlink-saver/releases/download/v1.8.0/Save.link.as.strm.-.Chrome.zip) | Extract it, then use **Load unpacked** from `chrome://extensions`. |
+| Firefox | [Release asset: `Save link as .strm - Firefox.zip`](https://github.com/mhasanbogura/streamlink-saver/releases/download/v1.8.0/Save.link.as.strm.-.Firefox.zip) | Extract it, open `about:debugging#/runtime/this-firefox`, select **Load Temporary Add-on**, and choose `manifest.json`. |
 
 Both ZIP files contain only the extension files. The Firefox package uses a Firefox-specific Manifest V3 manifest with the same save-path settings and right-click workflow.
 
