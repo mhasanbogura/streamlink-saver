@@ -1,0 +1,9 @@
+/* Broadcast Atelier: Swiss editorial layout, graphite material layers, signal vermilion actions, Space Grotesk + IBM Plex Mono. */
+@import "tailwindcss";
+
+:root { font-family: "Space Grotesk", system-ui, sans-serif; color: #f4eee4; background: #111110; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #111110; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+.mono { font-family: "IBM Plex Mono", monospace; }
