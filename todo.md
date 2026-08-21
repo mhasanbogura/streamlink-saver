@@ -1,11 +1,17 @@
 # StreamLink Saver Enhancement Tasks
 
+- [ ] Upload the finalized v1.1.0 source changes to the GitHub repository.
+- [ ] Create the public v1.1.0 GitHub Release with the extension ZIP asset.
+
+- [x] Add a visible context-menu success notification after the hosted handoff opens.
+- [ ] Build the updated extension ZIP and publish it in a GitHub Release.
+
 - [x] Replace the unavailable Manus-hosted brand image with the supplied compact link icon in the GitHub Pages build.
 
-- [ ] Trigger the enabled GitHub Pages workflow and verify the published handoff route.
+- [x] Trigger the enabled GitHub Pages workflow and verify the published handoff route.
 
-- [ ] Confirm the refreshed GitHub integration can write to `mhasanbogura/streamlink-saver`.
-- [ ] Upload the finalized source, enable Pages, and verify the GitHub Pages handoff route.
+- [x] Confirm the refreshed GitHub integration can write to `mhasanbogura/streamlink-saver`.
+- [x] Upload the finalized source, enable Pages, and verify the GitHub Pages handoff route.
 
 - [ ] Upload the finalized project through GitHub’s API-based repository write route.
 

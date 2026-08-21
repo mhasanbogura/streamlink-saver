@@ -2,6 +2,18 @@
 const MENU_ID = "streamlink-save-link";
 const HOSTED_HANDOFF_URL = "https://mhasanbogura.github.io/streamlink-saver/";
 
+function showHandoffNotification(filename) {
+  const notificationId = `streamlink-handoff-${Date.now()}`;
+  chrome.notifications.create(notificationId, {
+    type: "basic",
+    iconUrl: "icon64.png",
+    title: "StreamLink Saver",
+    message: `Creating ${filename} via GitHub Pages.`,
+    priority: 1,
+  });
+  setTimeout(() => chrome.notifications.clear(notificationId).catch(() => {}), 6000);
+}
+
 function isSupportedUrl(value) {
   try {
     const url = new URL(value || "");
@@ -78,8 +90,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     const handoffUrl = new URL(HOSTED_HANDOFF_URL);
     handoffUrl.searchParams.set("handoff", "1");
     handoffUrl.searchParams.set("streamUrl", url);
-    handoffUrl.searchParams.set("filename", filenameFromLabel(label, url));
+    const filename = filenameFromLabel(label, url);
+    handoffUrl.searchParams.set("filename", filename);
     const handoffTab = await chrome.tabs.create({ url: handoffUrl.href, active: false });
+    showHandoffNotification(filename);
     if (handoffTab.id) {
       setTimeout(() => chrome.tabs.remove(handoffTab.id).catch(() => {}), 7000);
     }
