@@ -24,7 +24,7 @@ Edit `extension/config.js` before loading the extension. Set the one-line consta
 const SAVE_PATH = "Downloads/Direct Link";
 ```
 
-Use a path such as `Downloads/Media/Streams`. StreamLink Saver removes the leading `Downloads` segment before sending the filename to Chrome, preventing nested `Downloads/Downloads` folders. All future popup and right-click saves are written automatically to that folder with a `.strm` extension. Reload the extension at `chrome://extensions` after changing the configuration file.
+Use a path such as `Downloads/Media/Streams`. StreamLink Saver opens the hosted download route, then assigns the configured final filename only when Chrome determines the download. This avoids generic names such as `download` and preserves the `.strm` extension inside the configured subfolder. Reload the extension at `chrome://extensions` after changing the configuration file.
 3. Alternatively, open StreamLink Saver, choose **Use current page** or paste the URL, optionally change the output base name, and select **Save link as .strm**.
 
 For the example URL above, the extension writes `movie.strm` containing:

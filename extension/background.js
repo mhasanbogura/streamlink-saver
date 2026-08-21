@@ -1,15 +1,9 @@
-/* Broadcast Atelier: direct context-menu routing with a fixed Downloads-relative folder defined in config.js. */
+/* Broadcast Atelier: hosted download route with event-time filename assignment for dependable local .strm output. */
 importScripts("config.js");
 
 const MENU_ID = "streamlink-save-link";
 const HOSTED_HANDOFF_URL = "https://mhasanbogura.github.io/streamlink-saver/";
-
-function createStrmDataUrl(url) {
-  const content = new TextEncoder().encode(`${url}\n`);
-  let binary = "";
-  for (const byte of content) binary += String.fromCharCode(byte);
-  return `data:application/octet-stream;base64,${btoa(binary)}`;
-}
+const PENDING_SAVES_KEY = "streamlinkPendingSaves";
 
 function normalizeSavePath(value) {
   const parts = String(value || "")
@@ -75,6 +69,51 @@ function filenameFromLabel(label, fallbackUrl) {
   return fileBase && !isGenericName(fileBase) ? `${fileBase}.strm` : filenameFromUrl(fallbackUrl);
 }
 
+function buildDownloadPath(filename) {
+  return fixedSaveFolder ? `${fixedSaveFolder}/${filename}` : filename;
+}
+
+async function getPendingSaves() {
+  const { [PENDING_SAVES_KEY]: pending = [] } = await chrome.storage.session.get({ [PENDING_SAVES_KEY]: [] });
+  return Array.isArray(pending) ? pending : [];
+}
+
+async function setPendingSaves(pending) {
+  await chrome.storage.session.set({ [PENDING_SAVES_KEY]: pending.slice(-8) });
+}
+
+async function queueHostedSave(url, filename) {
+  const finalPath = buildDownloadPath(filename);
+  const pending = await getPendingSaves();
+  pending.push({ finalPath, createdAt: Date.now() });
+  await setPendingSaves(pending);
+
+  const handoffUrl = new URL(HOSTED_HANDOFF_URL);
+  handoffUrl.searchParams.set("handoff", "1");
+  handoffUrl.searchParams.set("streamUrl", url);
+  handoffUrl.searchParams.set("filename", filename);
+  const handoffTab = await chrome.tabs.create({ url: handoffUrl.href, active: false });
+  showNotification(`Preparing ${finalPath}…`, "handoff");
+  if (handoffTab.id) {
+    setTimeout(() => chrome.tabs.remove(handoffTab.id).catch(() => {}), 7000);
+  }
+}
+
+chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
+  (async () => {
+    const pending = await getPendingSaves();
+    const next = pending.shift();
+    if (!next) {
+      suggest();
+      return;
+    }
+    await setPendingSaves(pending);
+    suggest({ filename: next.finalPath, conflictAction: "uniquify" });
+    showNotification(`Saved to Downloads/${next.finalPath}`);
+  })().catch(() => suggest());
+  return true;
+});
+
 async function setUpMenu() {
   await chrome.contextMenus.removeAll();
   chrome.contextMenus.create({
@@ -93,44 +132,29 @@ chrome.runtime.onStartup.addListener(() => {
   setUpMenu().catch((error) => console.warn("Could not restore StreamLink Saver menu", error));
 });
 
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message?.type !== "streamlink-save" || !isSupportedUrl(message.url)) return;
+  const filename = sanitizeFileBase(message.filename || "stream") + ".strm";
+  queueHostedSave(message.url, filename)
+    .then(() => sendResponse({ ok: true, finalPath: buildDownloadPath(filename) }))
+    .catch((error) => sendResponse({ ok: false, error: String(error?.message || error) }));
+  return true;
+});
+
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== MENU_ID || !isSupportedUrl(info.linkUrl)) return;
-
-  const url = info.linkUrl;
   try {
     let label = "";
     if (tab?.id) {
       try {
-        const response = await chrome.tabs.sendMessage(tab.id, { type: "streamlink-get-last-link", linkUrl: url });
+        const response = await chrome.tabs.sendMessage(tab.id, { type: "streamlink-get-last-link", linkUrl: info.linkUrl });
         label = response?.label || "";
       } catch {
         // Content scripts are unavailable on browser-managed pages; the URL fallback remains available.
       }
     }
-
-    const filename = filenameFromLabel(label, url);
-    if (fixedSaveFolder) {
-      const downloadPath = `${fixedSaveFolder}/${filename}`;
-      await chrome.downloads.download({
-        url: createStrmDataUrl(url),
-        filename: downloadPath,
-        saveAs: false,
-        conflictAction: "uniquify",
-      });
-      showNotification(`Saved to Downloads/${downloadPath}`);
-      return;
-    }
-
-    const handoffUrl = new URL(HOSTED_HANDOFF_URL);
-    handoffUrl.searchParams.set("handoff", "1");
-    handoffUrl.searchParams.set("streamUrl", url);
-    handoffUrl.searchParams.set("filename", filename);
-    const handoffTab = await chrome.tabs.create({ url: handoffUrl.href, active: false });
-    showNotification(`Creating ${filename} via GitHub Pages.`, "handoff");
-    if (handoffTab.id) {
-      setTimeout(() => chrome.tabs.remove(handoffTab.id).catch(() => {}), 7000);
-    }
+    await queueHostedSave(info.linkUrl, filenameFromLabel(label, info.linkUrl));
   } catch (error) {
-    console.warn("StreamLink Saver could not create the .strm file", error);
+    console.warn("StreamLink Saver could not open the hosted .strm download handoff", error);
   }
 });

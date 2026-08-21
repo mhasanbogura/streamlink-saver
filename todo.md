@@ -1,5 +1,11 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Route saves through the hosted download page and keep the expected `.strm` path pending in the extension.
+- [x] Intercept the hosted download event to force the configured subfolder and resolved `.strm` filename.
+- [x] Validate that generic browser download names no longer replace the intended filename.
+
+- [x] Create the public v1.4.0 GitHub Release with the corrected SAVE_PATH extension ZIP.
+
 - [x] Replace the configuration object with a simple Downloads-prefixed `SAVE_PATH` constant.
 - [x] Strip the leading `Downloads` directory before passing the target subfolder to Chrome.
 - [x] Preserve the resolved `.strm` filename for configured subfolder downloads and validate it.

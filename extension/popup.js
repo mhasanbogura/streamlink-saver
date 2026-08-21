@@ -42,13 +42,6 @@ function filenameFromUrl(value) {
   }
 }
 
-function createStrmDataUrl(url) {
-  const content = new TextEncoder().encode(`${url}\n`);
-  let binary = "";
-  for (const byte of content) binary += String.fromCharCode(byte);
-  return `data:application/octet-stream;base64,${btoa(binary)}`;
-}
-
 function updateOutput() {
   if (!fileNameWasEdited) fileName.value = filenameFromUrl(sourceUrl.value);
   const filename = `${sanitizeFileBase(fileName.value)}.strm`;
@@ -96,20 +89,13 @@ async function saveStreamFile() {
   }
 
   const filename = `${sanitizeFileBase(fileName.value)}.strm`;
-  const dataUrl = createStrmDataUrl(url);
-  const configuredParts = String(globalThis.SAVE_PATH || "")
-    .split(/[\\/]+/)
-    .map((part) => part.replace(/[<>:"|?*\u0000-\u001f]/g, "-").trim())
-    .filter((part) => part && part !== "." && part !== "..");
-  if (configuredParts[0]?.toLowerCase() === "downloads") configuredParts.shift();
-  const configuredFolder = configuredParts.join("/").slice(0, 180);
-  const downloadPath = configuredFolder ? `${configuredFolder}/${filename}` : filename;
   saveButton.disabled = true;
-  setStatus("Creating the .strm file…");
+  setStatus("Preparing the .strm file…");
   try {
-    await chrome.downloads.download({ url: dataUrl, filename: downloadPath, saveAs: false, conflictAction: "uniquify" });
+    const response = await chrome.runtime.sendMessage({ type: "streamlink-save", url, filename });
+    if (!response?.ok) throw new Error(response?.error || "handoff failed");
     statusDot.className = "status-dot success";
-    setStatus(`Saved ${configuredFolder ? `to Downloads/${downloadPath}` : filename}`, "success");
+    setStatus(`Saving to Downloads/${response.finalPath}`, "success");
   } catch {
     statusDot.className = "status-dot ready";
     setStatus("Chrome could not create the file. Try again.", "error");
