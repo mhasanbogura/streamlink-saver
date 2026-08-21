@@ -1,5 +1,10 @@
 # StreamLink Saver Enhancement Tasks
 
+- [x] Wrap the release package in `Save link as .strm/` with `Chrome/` and `Firefox/` subfolders.
+- [ ] Replace the release asset and verify the wrapped folder layout.
+
+- [ ] Preserve `Save link as .strm.zip` exactly as both the GitHub Release label and the downloaded filename, if GitHub Releases support it.
+
 - [x] Rebuild the release ZIP so extraction opens directly to `Chrome/` and `Firefox/`.
 - [x] Replace the release asset and verify GitHub’s displayed and downloaded filename behavior; GitHub displays the requested label but normalizes spaces to periods in the downloaded asset filename.
 
